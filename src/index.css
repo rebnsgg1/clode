@@ -1,0 +1,246 @@
+@import '@fontsource-variable/manrope';
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --radius: 1.25rem;
+  --background: oklch(0.985 0.002 90);
+  --foreground: oklch(0.2 0.01 260);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.2 0.01 260);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.2 0.01 260);
+  --primary: oklch(0.66 0.15 160);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.955 0.004 90);
+  --secondary-foreground: oklch(0.25 0.01 260);
+  --muted: oklch(0.955 0.004 90);
+  --muted-foreground: oklch(0.52 0.012 260);
+  --accent: oklch(0.95 0.005 90);
+  --accent-foreground: oklch(0.22 0.01 260);
+  --destructive: oklch(0.6 0.21 25);
+  --border: oklch(0.915 0.004 90);
+  --input: oklch(0.9 0.005 90);
+  --ring: oklch(0.66 0.15 160);
+
+  --pp: oklch(0.68 0.16 158);
+  --pp-soft: oklch(0.95 0.05 160);
+  --pp-foreground: oklch(0.42 0.11 160);
+  --regular: oklch(0.72 0.17 52);
+  --regular-soft: oklch(0.96 0.045 60);
+  --regular-foreground: oklch(0.5 0.14 45);
+
+  --protein: oklch(0.65 0.15 250);
+  --fat: oklch(0.78 0.15 80);
+  --carbs: oklch(0.68 0.16 158);
+
+  --glass: oklch(1 0 0 / 0.72);
+  --shadow-soft: 0 1px 2px oklch(0 0 0 / 0.04), 0 8px 24px -8px oklch(0 0 0 / 0.08);
+  --shadow-lift: 0 2px 4px oklch(0 0 0 / 0.04), 0 18px 40px -12px oklch(0 0 0 / 0.16);
+}
+
+.dark {
+  --background: oklch(0.155 0.004 270);
+  --foreground: oklch(0.96 0.003 90);
+  --card: oklch(0.2 0.005 270);
+  --card-foreground: oklch(0.96 0.003 90);
+  --popover: oklch(0.21 0.005 270);
+  --popover-foreground: oklch(0.96 0.003 90);
+  --primary: oklch(0.72 0.15 160);
+  --primary-foreground: oklch(0.16 0.02 160);
+  --secondary: oklch(0.25 0.006 270);
+  --secondary-foreground: oklch(0.94 0.003 90);
+  --muted: oklch(0.24 0.006 270);
+  --muted-foreground: oklch(0.68 0.01 270);
+  --accent: oklch(0.26 0.006 270);
+  --accent-foreground: oklch(0.96 0.003 90);
+  --destructive: oklch(0.65 0.2 25);
+  --border: oklch(0.28 0.006 270);
+  --input: oklch(0.3 0.006 270);
+  --ring: oklch(0.72 0.15 160);
+
+  --pp: oklch(0.74 0.15 158);
+  --pp-soft: oklch(0.3 0.06 160);
+  --pp-foreground: oklch(0.85 0.12 160);
+  --regular: oklch(0.76 0.16 55);
+  --regular-soft: oklch(0.32 0.06 55);
+  --regular-foreground: oklch(0.86 0.12 60);
+
+  --protein: oklch(0.7 0.14 250);
+  --fat: oklch(0.8 0.14 80);
+  --carbs: oklch(0.74 0.15 158);
+
+  --glass: oklch(0.2 0.005 270 / 0.7);
+  --shadow-soft: 0 1px 2px oklch(0 0 0 / 0.3), 0 8px 24px -8px oklch(0 0 0 / 0.5);
+  --shadow-lift: 0 2px 4px oklch(0 0 0 / 0.3), 0 18px 40px -12px oklch(0 0 0 / 0.6);
+}
+
+@theme inline {
+  --font-sans: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-pp: var(--pp);
+  --color-pp-soft: var(--pp-soft);
+  --color-pp-foreground: var(--pp-foreground);
+  --color-regular: var(--regular);
+  --color-regular-soft: var(--regular-soft);
+  --color-regular-foreground: var(--regular-foreground);
+  --color-protein: var(--protein);
+  --color-fat: var(--fat);
+  --color-carbs: var(--carbs);
+  --color-glass: var(--glass);
+  --radius-sm: calc(var(--radius) - 8px);
+  --radius-md: calc(var(--radius) - 6px);
+  --radius-lg: calc(var(--radius) - 4px);
+  --radius-xl: var(--radius);
+  --radius-2xl: calc(var(--radius) + 4px);
+  --shadow-soft: var(--shadow-soft);
+  --shadow-lift: var(--shadow-lift);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    -webkit-tap-highlight-color: transparent;
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+    overscroll-behavior-y: none;
+  }
+  button {
+    cursor: pointer;
+  }
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+@utility glass {
+  background: var(--glass);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@utility pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes sheet-down {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes pop-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.sheet-content[data-state='open'] {
+  animation: sheet-up 380ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+.sheet-content[data-state='closed'] {
+  animation: sheet-down 240ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+.overlay[data-state='open'] {
+  animation: fade-in 250ms ease-out;
+}
+.overlay[data-state='closed'] {
+  animation: fade-out 200ms ease-in;
+}
+@media (min-width: 768px) {
+  .sheet-content[data-state='open'] {
+    animation: pop-in 260ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  .sheet-content[data-state='closed'] {
+    animation: pop-out 180ms ease-in;
+  }
+}
