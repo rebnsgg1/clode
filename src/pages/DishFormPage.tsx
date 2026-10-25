@@ -9,7 +9,7 @@ import { compressImage } from '@/lib/image'
 import { allTags } from '@/lib/filters'
 import { parseMinutes } from '@/lib/time'
 import { COVER_EMOJIS, COVER_PRESETS, DIFFICULTIES, MEALS, UNITS } from '@/lib/constants'
-import { cn, haptic, uid } from '@/lib/utils'
+import { cn, uid } from '@/lib/utils'
 import type { Cover, Difficulty, Dish, DishKind, MealType } from '@/types'
 import { PageHeader } from '@/components/PageHeader'
 import { DishCover } from '@/components/DishCover'
@@ -204,7 +204,6 @@ function DishForm({ existing }: { existing?: Dish }) {
       updatedAt: now,
     }
     await db.dishes.put(dish)
-    haptic(20)
     toast.success(existing ? 'Зміни збережено' : 'Страву додано 🎉')
     navigate(`/dish/${dish.id}`, { replace: true })
   }
@@ -495,7 +494,7 @@ function DishForm({ existing }: { existing?: Dish }) {
         </Card>
       </div>
 
-      <div className="sticky bottom-[calc(max(env(safe-area-inset-bottom),12px)+80px)] z-20 mt-6 md:bottom-6">
+      <div className="sticky bottom-6 z-20 mt-6">
         <div className="glass shadow-lift ring-border/70 flex gap-3 rounded-3xl p-2 ring-1">
           <Button variant="ghost" className="flex-1" onClick={() => navigate(-1)}>
             Скасувати

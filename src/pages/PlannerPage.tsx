@@ -20,7 +20,7 @@ import {
 import { ChevronLeft, ChevronRight, GripVertical, Plus, Search, ShoppingBasket, X, Minus } from 'lucide-react'
 import { db, addToPlan } from '@/lib/db'
 import { useDishes } from '@/hooks/useDishes'
-import { addDays, cn, formatDayMonth, haptic, startOfWeek, toDateKey, WEEKDAYS, WEEKDAYS_SHORT } from '@/lib/utils'
+import { addDays, cn, formatDayMonth, startOfWeek, toDateKey, WEEKDAYS, WEEKDAYS_SHORT } from '@/lib/utils'
 import type { Dish, PlanEntry } from '@/types'
 import { PageHeader } from '@/components/PageHeader'
 import { DishCover } from '@/components/DishCover'
@@ -51,7 +51,6 @@ export default function PlannerPage() {
   )
 
   const onDragStart = (e: DragStartEvent) => {
-    haptic(15)
     setActive(e.active.data.current as DragData)
   }
 
@@ -61,7 +60,6 @@ export default function PlannerPage() {
     const overId = e.over?.id ? String(e.over.id) : null
     if (!data || !overId?.startsWith('day:')) return
     const date = overId.slice(4)
-    haptic(10)
     if (data.type === 'lib') {
       await addToPlan(data.dish.id, date, data.dish.servings)
     } else if (data.entry.date !== date) {
@@ -108,14 +106,14 @@ export default function PlannerPage() {
       </div>
 
       {!dishes || !entries ? (
-        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
           {Array.from({ length: 7 }, (_, i) => (
             <Skeleton key={i} className="h-36 rounded-3xl" />
           ))}
         </div>
       ) : (
         <DndContext sensors={sensors} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragCancel={() => setActive(null)}>
-          <div className="grid gap-5 lg:grid-cols-[260px_minmax(0,1fr)]">
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-[260px_minmax(0,1fr)]">
             {/* Бібліотека страв */}
             <aside className="lg:sticky lg:top-10 lg:self-start">
               <div className="bg-card shadow-soft ring-border/60 rounded-3xl p-3 ring-1">
@@ -124,7 +122,7 @@ export default function PlannerPage() {
                   <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Знайти страву" className="h-10 pl-9" />
                 </div>
                 <p className="text-muted-foreground mb-2 px-1 text-xs font-semibold">
-                  <span className="lg:hidden">Утримуй і перетягни на день ↓</span>
+                  <span className="lg:hidden">Перетягни страву на потрібний день ↓</span>
                   <span className="hidden lg:inline">Перетягни страву на день →</span>
                 </p>
                 <div className="no-scrollbar -mx-3 flex gap-2 overflow-x-auto px-3 pb-1 lg:mx-0 lg:max-h-[60vh] lg:flex-col lg:overflow-x-visible lg:overflow-y-auto lg:px-0">
@@ -137,7 +135,7 @@ export default function PlannerPage() {
             </aside>
 
             {/* Дні тижня */}
-            <div className="grid gap-3 md:grid-cols-2 2xl:grid-cols-3">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 2xl:grid-cols-3">
               {days.map((d, i) => {
                 const key = toDateKey(d)
                 const dayEntries = entries.filter((e) => e.date === key).sort((a, b) => a.createdAt - b.createdAt)

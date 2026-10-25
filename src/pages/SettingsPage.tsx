@@ -1,22 +1,17 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { toast } from 'sonner'
-import { Download, Upload, RotateCcw, Smartphone, Monitor, Moon, Sun, Check, Share, Loader2 } from 'lucide-react'
+import { Download, Upload, RotateCcw, Monitor, Moon, Sun, Check, Loader2, HardDrive } from 'lucide-react'
 import { db, restoreSeed } from '@/lib/db'
-import { exportBackup, importBackup, readBackup } from '@/lib/backup'
+import { exportBackup, importBackup, pickBackup, type BackupData } from '@/lib/backup'
 import { useTheme, type ThemeMode } from '@/hooks/useTheme'
-import { useInstallPrompt } from '@/hooks/useInstallPrompt'
 import { cn, plural } from '@/lib/utils'
 import { PageHeader } from '@/components/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent } from '@/components/ui/sheet'
 
-type BackupData = Awaited<ReturnType<typeof readBackup>>
-
 export default function SettingsPage() {
   const { mode, setMode } = useTheme()
-  const install = useInstallPrompt()
-  const fileRef = useRef<HTMLInputElement>(null)
   const [pending, setPending] = useState<BackupData | null>(null)
   const [busy, setBusy] = useState(false)
   const counts = useLiveQuery(async () => ({
@@ -45,8 +40,6 @@ export default function SettingsPage() {
     }
   }
 
-  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent)
-
   return (
     <div className="mx-auto max-w-2xl">
       <PageHeader title="Налаштування" />
@@ -73,38 +66,41 @@ export default function SettingsPage() {
           </div>
         </Section>
 
-        <Section title="Резервна копія" subtitle="Збережи всю базу в JSON-файл, щоб перенести на інший пристрій або не втратити рецепти.">
-          <div className="grid gap-2 sm:grid-cols-2">
+        <Section
+          title="Резервна копія"
+          subtitle="Збережи всі рецепти, план та історію в JSON-файл — щоб не втратити дані або перенести їх на інший комп'ютер."
+        >
+          <div className="grid grid-cols-2 gap-2">
             <Button
               variant="outline"
               size="lg"
               onClick={async () => {
-                const n = await exportBackup()
-                toast.success(`Експортовано ${n} ${plural(n, ['страву', 'страви', 'страв'])}`)
+                try {
+                  const res = await exportBackup()
+                  if (res)
+                    toast.success(`Збережено ${res.count} ${plural(res.count, ['страву', 'страви', 'страв'])}`, { description: res.path })
+                } catch (e) {
+                  toast.error('Не вдалося зберегти', { description: String(e) })
+                }
               }}
             >
-              <Download /> Експорт у JSON
+              <Download /> Зберегти копію…
             </Button>
-            <Button variant="outline" size="lg" onClick={() => fileRef.current?.click()}>
-              <Upload /> Імпорт з JSON
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={async () => {
+                try {
+                  const data = await pickBackup()
+                  if (data) setPending(data)
+                } catch (e) {
+                  toast.error(e instanceof Error ? e.message : String(e))
+                }
+              }}
+            >
+              <Upload /> Відновити з копії…
             </Button>
           </div>
-          <input
-            ref={fileRef}
-            type="file"
-            accept="application/json,.json"
-            className="hidden"
-            onChange={async (e) => {
-              const f = e.target.files?.[0]
-              e.target.value = ''
-              if (!f) return
-              try {
-                setPending(await readBackup(f))
-              } catch (err) {
-                toast.error((err as Error).message)
-              }
-            }}
-          />
           {counts && (
             <p className="text-muted-foreground mt-3 text-[13px]">
               У базі: {counts.dishes} {plural(counts.dishes, ['страва', 'страви', 'страв'])}, {counts.plan} у плані, {counts.history} в
@@ -113,47 +109,15 @@ export default function SettingsPage() {
           )}
         </Section>
 
-        <Section title="Встановити на телефон" subtitle="«Моє меню» працює як застосунок: з іконкою на екрані й без інтернету.">
-          {install.installed ? (
-            <p className="text-primary inline-flex items-center gap-2 text-sm font-bold">
-              <Check className="size-4" /> Застосунок уже встановлено
-            </p>
-          ) : install.canInstall ? (
-            <Button
-              size="lg"
-              onClick={async () => {
-                if (await install.install()) toast.success('Встановлено! 🎉')
-              }}
-            >
-              <Smartphone /> Встановити застосунок
-            </Button>
-          ) : (
-            <ol className="text-muted-foreground space-y-2 text-sm">
-              {isIOS ? (
-                <>
-                  <li>
-                    1. Відкрий сайт у <b className="text-foreground">Safari</b>
-                  </li>
-                  <li className="flex items-center gap-1">
-                    2. Натисни <Share className="text-foreground inline size-4" /> <b className="text-foreground">Поділитися</b>
-                  </li>
-                  <li>
-                    3. Обери <b className="text-foreground">«На початковий екран»</b>
-                  </li>
-                </>
-              ) : (
-                <>
-                  <li>
-                    1. Відкрий сайт у <b className="text-foreground">Chrome</b>
-                  </li>
-                  <li>
-                    2. Меню <b className="text-foreground">⋮</b> → <b className="text-foreground">«Встановити застосунок»</b> або «Додати на
-                    головний екран»
-                  </li>
-                </>
-              )}
-            </ol>
-          )}
+        <Section title="Де зберігаються дані">
+          <p className="text-muted-foreground flex gap-3 text-sm">
+            <HardDrive className="text-foreground mt-0.5 size-5 shrink-0" />
+            <span>
+              Усе зберігається лише на цьому комп'ютері, у папці профілю Windows (
+              <code className="text-foreground">%LOCALAPPDATA%\ua.moiemenu.desktop</code>). Програма працює повністю без інтернету. Під час
+              видалення програми дані лишаються, якщо не поставити галочку «Видалити дані програми».
+            </span>
+          </p>
         </Section>
 
         <Section title="Стартові страви" subtitle="Повернути видалені страви з початкового набору.">
@@ -168,7 +132,7 @@ export default function SettingsPage() {
           </Button>
         </Section>
 
-        <p className="text-muted-foreground pt-2 pb-4 text-center text-xs">Моє меню · дані зберігаються лише на цьому пристрої</p>
+        <p className="text-muted-foreground pt-2 pb-4 text-center text-xs">Моє меню · версія {__APP_VERSION__}</p>
       </div>
 
       <Sheet open={!!pending} onOpenChange={(o) => !o && setPending(null)}>

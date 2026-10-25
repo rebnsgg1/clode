@@ -8,7 +8,7 @@ import { db } from '@/lib/db'
 import { useDishes } from '@/hooks/useDishes'
 import { buildShoppingList } from '@/lib/shopping'
 import { formatAmount } from '@/lib/nutrition'
-import { addDays, cn, formatDayMonth, haptic, plural, startOfWeek, toDateKey, uid, fromDateKey } from '@/lib/utils'
+import { addDays, cn, formatDayMonth, plural, startOfWeek, toDateKey, uid, fromDateKey } from '@/lib/utils'
 import { PageHeader } from '@/components/PageHeader'
 import { EmptyState } from '@/components/EmptyState'
 import { Segmented } from '@/components/ui/segmented'
@@ -76,7 +76,6 @@ export default function ShoppingPage() {
   const progress = rows.length ? done.length / rows.length : 0
 
   const toggle = async (row: Row, value: boolean) => {
-    haptic()
     if (row.extra) await db.shoppingExtras.update(row.key, { checked: value })
     else await db.shoppingChecks.put({ key: row.key, checked: value })
   }

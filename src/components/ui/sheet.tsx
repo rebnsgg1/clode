@@ -7,7 +7,7 @@ export const Sheet = DialogPrimitive.Root
 export const SheetTrigger = DialogPrimitive.Trigger
 export const SheetClose = DialogPrimitive.Close
 
-/** Нижня шторка на телефоні та діалог по центру на десктопі */
+/** Модальне вікно по центру програми */
 export function SheetContent({
   className,
   children,
@@ -21,14 +21,12 @@ export function SheetContent({
       <DialogPrimitive.Content
         className={cn(
           'sheet-content bg-popover text-popover-foreground shadow-lift fixed z-50 flex flex-col outline-none',
-          'pb-safe inset-x-0 bottom-0 max-h-[90dvh] rounded-t-[28px]',
-          'md:inset-x-auto md:top-1/2 md:bottom-auto md:left-1/2 md:w-full md:max-w-lg md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-3xl md:pb-0',
+          'top-1/2 left-1/2 max-h-[85vh] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-3xl',
           className,
         )}
         {...props}
       >
-        <div className="bg-border mx-auto mt-2.5 h-1.5 w-10 shrink-0 rounded-full md:hidden" />
-        <div className="flex items-start justify-between gap-4 px-6 pt-4 pb-2 md:pt-6">
+        <div className="flex items-start justify-between gap-4 px-6 pt-6 pb-2">
           <div>
             <DialogPrimitive.Title className="text-xl font-bold tracking-tight">{title}</DialogPrimitive.Title>
             {description ? (

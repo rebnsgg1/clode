@@ -1,11 +1,10 @@
-import { cn, haptic } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 
 export function Chip({ active, className, onClick, ...props }: React.ComponentProps<'button'> & { active?: boolean }) {
   return (
     <button
       type="button"
       onClick={(e) => {
-        haptic()
         onClick?.(e)
       }}
       className={cn(

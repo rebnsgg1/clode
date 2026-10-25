@@ -6,7 +6,7 @@ import { useDishes } from '@/hooks/useDishes'
 import { useStoredState } from '@/hooks/useStoredState'
 import { MEALS } from '@/lib/constants'
 import type { KindFilter } from '@/lib/filters'
-import { cn, formatMinutes, haptic, pick, shuffle } from '@/lib/utils'
+import { cn, formatMinutes, pick, shuffle } from '@/lib/utils'
 import type { Dish, MealType } from '@/types'
 import { PageHeader } from '@/components/PageHeader'
 import { RandomTabs } from '@/components/RandomTabs'
@@ -40,7 +40,6 @@ export default function RandomPage() {
     const idx = Math.floor(-v / ITEM_H + 0.5)
     if (idx !== lastTick.current) {
       lastTick.current = idx
-      haptic(3)
     }
   })
 
@@ -52,7 +51,6 @@ export default function RandomPage() {
 
   const spin = async () => {
     if (spinning || !pool.length) return
-    haptic(20)
     const candidates = winner && pool.length > 1 ? pool.filter((d) => d.id !== winner.id) : pool
     const chosen = pick(candidates)!
     const filler: Dish[] = []
@@ -68,7 +66,6 @@ export default function RandomPage() {
     setSpinning(false)
     setWinner(chosen)
     setBurst((b) => b + 1)
-    haptic(40)
   }
 
   if (!dishes) return <Skeleton className="h-[480px] rounded-3xl" />

@@ -1,4 +1,6 @@
+import { invoke } from '@tauri-apps/api/core'
 import { db } from './db'
+import { isTauri } from './tauri'
 import type { Dish, HistoryEntry, MetaEntry, PlanEntry, ShoppingCheck, ShoppingExtra } from '@/types'
 
 interface Backup {
@@ -13,8 +15,10 @@ interface Backup {
   meta: MetaEntry[]
 }
 
-export async function exportBackup() {
-  const data: Backup = {
+export type BackupData = Backup
+
+async function collectBackup(): Promise<Backup> {
+  return {
     app: 'moie-menu',
     version: 1,
     exportedAt: new Date().toISOString(),
@@ -25,20 +29,52 @@ export async function exportBackup() {
     shoppingExtras: await db.shoppingExtras.toArray(),
     meta: await db.meta.toArray(),
   }
-  const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = `moie-menu-${new Date().toISOString().slice(0, 10)}.json`
-  document.body.appendChild(a)
-  a.click()
-  a.remove()
-  setTimeout(() => URL.revokeObjectURL(url), 1000)
-  return data.dishes.length
 }
 
-export async function readBackup(file: File): Promise<Backup> {
-  const text = await file.text()
+/**
+ * Зберігає резервну копію через системне вікно «Зберегти як».
+ * Повертає кількість страв і шлях до файлу або null, якщо користувач скасував.
+ */
+export async function exportBackup(): Promise<{ count: number; path: string } | null> {
+  const data = await collectBackup()
+  const contents = JSON.stringify(data, null, 2)
+  const fileName = `moie-menu-${new Date().toISOString().slice(0, 10)}.json`
+  if (isTauri()) {
+    const path = await invoke<string | null>('export_backup', { contents, fileName })
+    return path ? { count: data.dishes.length, path } : null
+  }
+  // Запасний варіант для розробки у звичайному браузері
+  const url = URL.createObjectURL(new Blob([contents], { type: 'application/json' }))
+  const a = document.createElement('a')
+  a.href = url
+  a.download = fileName
+  a.click()
+  setTimeout(() => URL.revokeObjectURL(url), 1000)
+  return { count: data.dishes.length, path: fileName }
+}
+
+/** Показує системне вікно вибору файлу й читає резервну копію. null — користувач скасував. */
+export async function pickBackup(): Promise<Backup | null> {
+  const text = isTauri() ? await invoke<string | null>('import_backup') : await pickFileInBrowser()
+  return text === null ? null : parseBackup(text)
+}
+
+function pickFileInBrowser(): Promise<string | null> {
+  return new Promise((resolve) => {
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = 'application/json,.json'
+    input.onchange = () => {
+      const file = input.files?.[0]
+      if (file) file.text().then(resolve)
+      else resolve(null)
+    }
+    input.oncancel = () => resolve(null)
+    input.click()
+  })
+}
+
+export function parseBackup(text: string): Backup {
   let data: Partial<Backup>
   try {
     data = JSON.parse(text)

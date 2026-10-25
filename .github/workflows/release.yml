@@ -1,0 +1,53 @@
+name: Release
+
+# Збирає Windows-інсталятор і публікує його в GitHub Releases при пуші тегу v*
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    name: Windows-інсталятор
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Встановити залежності
+        run: npm ci
+
+      - name: Перевірити типи
+        run: npm run typecheck
+
+      - name: Зібрати й опублікувати
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: 'Моє меню ${{ github.ref_name }}'
+          releaseBody: |
+            ## Встановлення
+            1. Завантаж **moie-menu_…_x64-setup.exe** нижче й запусти його.
+            2. Якщо Windows покаже «Windows захистив ваш ПК» — натисни **Докладніше → Виконати однаково** (програма не підписана сертифікатом).
+            3. Після встановлення ярлик «Моє меню» з'явиться на робочому столі та в меню Пуск.
+
+            Програма працює повністю без інтернету, усі рецепти зберігаються на твоєму комп'ютері.
+          releaseDraft: false
+          prerelease: false
+          assetNamePattern: 'moie-menu_[version]_[arch][setup][ext]'
+          args: --bundles nsis

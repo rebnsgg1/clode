@@ -8,7 +8,7 @@ import { useWakeLock } from '@/hooks/useWakeLock'
 import { db, markCooked } from '@/lib/db'
 import { formatAmount } from '@/lib/nutrition'
 import { stepTimerMinutes } from '@/lib/time'
-import { cn, haptic } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 import { StepTimerButton, TimerDock } from '@/components/StepTimer'
 import { StarRating } from '@/components/StarRating'
 import { EmptyState } from '@/components/EmptyState'
@@ -54,7 +54,6 @@ function CookMode({ dish }: { dish: Dish }) {
     (delta: number) => {
       setPage(([i]) => {
         const next = Math.min(total, Math.max(0, i + delta))
-        if (next !== i) haptic()
         return [next, delta]
       })
     },
@@ -81,7 +80,7 @@ function CookMode({ dish }: { dish: Dish }) {
   const minutes = step ? stepTimerMinutes(step) : undefined
 
   return (
-    <div className="bg-background fixed inset-0 z-50 flex flex-col pt-[max(env(safe-area-inset-top),16px)] pb-[max(env(safe-area-inset-bottom),16px)]">
+    <div className="bg-background fixed inset-0 z-50 flex flex-col py-6">
       {/* Верхня панель */}
       <div className="mx-auto w-full max-w-3xl px-5">
         <div className="flex items-center justify-between gap-3">
@@ -183,7 +182,6 @@ function CookMode({ dish }: { dish: Dish }) {
                     onClick={async () => {
                       await markCooked(dish)
                       setSaved(true)
-                      haptic(25)
                       toast.success('Записано в історію 🍽️')
                     }}
                   >

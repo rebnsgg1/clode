@@ -9,7 +9,7 @@ import { addToPlan } from '@/lib/db'
 import { DAY_SLOTS, generateDayMenu, menuCalories, type DaySlot, type DayMenu } from '@/lib/random'
 import type { KindFilter } from '@/lib/filters'
 import { sumMacros } from '@/lib/nutrition'
-import { cn, haptic, toDateKey } from '@/lib/utils'
+import { cn, toDateKey } from '@/lib/utils'
 import type { Dish } from '@/types'
 import { PageHeader } from '@/components/PageHeader'
 import { RandomTabs } from '@/components/RandomTabs'
@@ -58,7 +58,6 @@ export default function DayMenuPage() {
     setFits(res.fits)
     setState({ ...state, ids: Object.fromEntries(DAY_SLOTS.map(({ slot }) => [slot, res.menu[slot]?.id])) })
     setRollKey((k) => k + 1)
-    haptic(15)
   }
 
   const toggleLock = (slot: DaySlot) =>
@@ -88,7 +87,7 @@ export default function DayMenuPage() {
           }
         />
       ) : (
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
           <div className="space-y-5">
             <section className="bg-card shadow-soft ring-border/60 space-y-4 rounded-3xl p-4 ring-1 sm:p-5">
               <Segmented<KindFilter>

@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Plus, Search, X } from 'lucide-react'
@@ -56,11 +55,6 @@ export default function HomePage() {
           <p className="text-muted-foreground text-[15px] font-semibold">{greeting()} 👋</p>
           <h1 className="mt-0.5 text-[30px] leading-tight font-extrabold tracking-tight sm:text-[38px]">Що приготуємо?</h1>
         </div>
-        <Button asChild className="hidden sm:inline-flex md:hidden">
-          <Link to="/dish/new">
-            <Plus /> Додати
-          </Link>
-        </Button>
       </header>
 
       {!isEmptyDb && (
@@ -166,7 +160,7 @@ export default function HomePage() {
         <EmptyState
           emoji="🥗"
           title="Твоя книга рецептів порожня"
-          text="Додай улюблені страви — і вони завжди будуть під рукою, навіть офлайн."
+          text="Додай улюблені страви — і вони завжди будуть під рукою, навіть без інтернету."
           action={
             <Button asChild size="lg">
               <Link to="/dish/new">
@@ -199,24 +193,6 @@ export default function HomePage() {
             </AnimatePresence>
           </motion.div>
         </>
-      )}
-
-      {createPortal(
-        <motion.div
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: 'spring', stiffness: 400, damping: 22, delay: 0.2 }}
-          className="fixed right-5 bottom-[calc(max(env(safe-area-inset-bottom),12px)+84px)] z-30 sm:hidden"
-        >
-          <Link
-            to="/dish/new"
-            aria-label="Додати страву"
-            className="bg-primary text-primary-foreground shadow-lift grid size-14 place-items-center rounded-2xl transition active:scale-90"
-          >
-            <Plus className="size-6" strokeWidth={2.5} />
-          </Link>
-        </motion.div>,
-        document.body,
       )}
     </div>
   )

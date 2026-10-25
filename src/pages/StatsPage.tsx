@@ -113,7 +113,7 @@ export default function StatsPage() {
             />
           </div>
 
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             <section className="bg-card shadow-soft ring-border/60 rounded-3xl p-5 ring-1">
               <h2 className="mb-4 text-lg font-bold">Найчастіші страви</h2>
               <div className="space-y-3">

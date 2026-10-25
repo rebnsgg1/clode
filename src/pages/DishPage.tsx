@@ -9,7 +9,7 @@ import { addToPlan, db, deleteDish, markCooked } from '@/lib/db'
 import { DIFFICULTY_LABEL, MEAL_LABEL } from '@/lib/constants'
 import { formatAmount } from '@/lib/nutrition'
 import { stepTimerMinutes } from '@/lib/time'
-import { addDays, cn, formatDayMonth, formatMinutes, haptic, plural, toDateKey, WEEKDAYS } from '@/lib/utils'
+import { addDays, cn, formatDayMonth, formatMinutes, plural, toDateKey, WEEKDAYS } from '@/lib/utils'
 import { DishCover } from '@/components/DishCover'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { KindBadge } from '@/components/KindBadge'
@@ -61,13 +61,12 @@ function DishView({ dish }: { dish: Dish }) {
 
   const cooked = async () => {
     await markCooked(dish)
-    haptic(20)
     toast.success('Записано в історію 🍽️', { description: dish.name })
   }
 
   return (
-    <div className="-mt-[max(env(safe-area-inset-top),20px)] md:mt-0">
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-10">
+    <div>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-10">
         {/* Ліва колонка */}
         <div className="lg:sticky lg:top-10 lg:self-start">
           <motion.div
@@ -78,7 +77,7 @@ function DishView({ dish }: { dish: Dish }) {
           >
             <DishCover dish={dish} emojiClass="text-[110px] md:text-[140px]" />
             <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/30 to-transparent" />
-            <div className="absolute inset-x-0 top-0 flex items-center justify-between p-4 pt-[max(env(safe-area-inset-top),16px)] md:pt-4">
+            <div className="absolute inset-x-0 top-0 flex items-center justify-between p-4">
               <button
                 onClick={() => (window.history.length > 1 ? navigate(-1) : navigate('/'))}
                 className="grid size-10 place-items-center rounded-full bg-black/25 text-white backdrop-blur-md transition active:scale-90"
@@ -222,7 +221,6 @@ function DishView({ dish }: { dish: Dish }) {
                       <Checkbox
                         checked={isChecked}
                         onCheckedChange={(v) => {
-                          haptic()
                           setChecked({ ...checked, [ing.id]: !!v })
                         }}
                       />
@@ -348,7 +346,6 @@ export function PlanSheet({
               key={i}
               onClick={async () => {
                 await addToPlan(dish.id, toDateKey(d), servings)
-                haptic(15)
                 toast.success('Додано в планувальник', { description: `${WEEKDAYS[(d.getDay() + 6) % 7]}, ${formatDayMonth(d)}` })
                 onOpenChange(false)
               }}
@@ -366,7 +363,7 @@ export function PlanSheet({
 
 function DishSkeleton() {
   return (
-    <div className="grid gap-6 lg:grid-cols-2 lg:gap-10">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-10">
       <div className="space-y-4">
         <Skeleton className="-mx-4 aspect-[4/3.4] rounded-none rounded-b-[32px] sm:-mx-6 md:mx-0 md:aspect-[16/11] md:rounded-[28px]" />
         <Skeleton className="h-6 w-32" />

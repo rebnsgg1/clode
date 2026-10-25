@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { Star } from 'lucide-react'
-import { cn, haptic } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 
 export function StarRating({
   value,
@@ -31,7 +31,6 @@ export function StarRating({
             whileTap={{ scale: 0.75 }}
             whileHover={{ scale: 1.15 }}
             onClick={() => {
-              haptic()
               onChange(n === value ? 0 : n)
             }}
             className="p-0.5"

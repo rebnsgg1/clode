@@ -2,6 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Plus } from 'lucide-react'
 import { NAV_ITEMS } from './nav'
+import appIcon from '../../../assets/icon/icon.svg'
 import { ThemeSwitcher } from '@/components/ThemeSwitcher'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -9,9 +10,9 @@ import { cn } from '@/lib/utils'
 export function Sidebar() {
   const { pathname } = useLocation()
   return (
-    <aside className="glass fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r px-4 py-6 md:flex">
+    <aside className="glass fixed inset-y-0 left-0 z-30 flex w-64 flex-col border-r px-4 py-6">
       <Link to="/" className="mb-8 flex items-center gap-3 px-2">
-        <img src="/favicon.svg" alt="" className="shadow-soft size-10 rounded-xl" />
+        <img src={appIcon} alt="" className="size-10" />
         <div>
           <div className="text-lg leading-tight font-extrabold tracking-tight">Моє меню</div>
           <div className="text-muted-foreground text-xs font-medium">книга рецептів</div>

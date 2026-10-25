@@ -9,7 +9,6 @@ import { AppShell } from '@/components/layout/AppShell'
 import HomePage from '@/pages/HomePage'
 import DishPage from '@/pages/DishPage'
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
-const MorePage = lazy(() => import('@/pages/MorePage'))
 const SettingsPage = lazy(() => import('@/pages/SettingsPage'))
 const StatsPage = lazy(() => import('@/pages/StatsPage'))
 const ShoppingPage = lazy(() => import('@/pages/ShoppingPage'))
@@ -26,7 +25,7 @@ function ThemedToaster() {
 
 function PageFallback() {
   return (
-    <div className="mx-auto max-w-3xl space-y-4 p-6 md:pl-72">
+    <div className="mx-auto max-w-3xl space-y-4 p-10 pl-74">
       <Skeleton className="h-10 w-56" />
       <Skeleton className="h-64 rounded-3xl" />
     </div>
@@ -53,7 +52,6 @@ export default function App() {
                   <Route path="/shopping" element={<ShoppingPage />} />
                   <Route path="/stats" element={<StatsPage />} />
                   <Route path="/settings" element={<SettingsPage />} />
-                  <Route path="/more" element={<MorePage />} />
                   <Route path="*" element={<NotFoundPage />} />
                 </Route>
               </Routes>

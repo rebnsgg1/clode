@@ -78,11 +78,3 @@ export const WEEKDAYS = ['Понеділок', 'Вівторок', 'Середа
 export function formatDayMonth(d: Date) {
   return d.toLocaleDateString('uk-UA', { day: 'numeric', month: 'long' })
 }
-
-export function haptic(ms = 8) {
-  try {
-    navigator.vibrate?.(ms)
-  } catch {
-    /* не підтримується */
-  }
-}

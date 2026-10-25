@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { Heart } from 'lucide-react'
 import { db } from '@/lib/db'
-import { cn, haptic } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 import type { Dish } from '@/types'
 
 export function FavoriteButton({ dish, className }: { dish: Pick<Dish, 'id' | 'favorite'>; className?: string }) {
@@ -13,7 +13,6 @@ export function FavoriteButton({ dish, className }: { dish: Pick<Dish, 'id' | 'f
       onClick={(e) => {
         e.preventDefault()
         e.stopPropagation()
-        haptic(12)
         db.dishes.update(dish.id, { favorite: !dish.favorite })
       }}
       className={cn(

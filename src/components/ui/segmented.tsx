@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { cn, haptic } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 
 export interface SegmentedOption<T extends string> {
   value: T
@@ -34,7 +34,6 @@ export function Segmented<T extends string>({
             role="tab"
             aria-selected={active}
             onClick={() => {
-              haptic()
               onChange(o.value)
             }}
             className={cn(

@@ -1,3 +1,4 @@
+import { isTauri } from '@/lib/tauri'
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
 
 export type ThemeMode = 'light' | 'dark' | 'system'
@@ -37,9 +38,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const root = document.documentElement
     root.classList.toggle('dark', resolved === 'dark')
-    const meta = document.querySelectorAll('meta[name="theme-color"]')
-    meta.forEach((m) => m.setAttribute('content', resolved === 'dark' ? '#0c0c0e' : '#fafaf9'))
-  }, [resolved])
+    // Заголовок вікна Windows теж світлий/темний разом із темою
+    if (isTauri()) {
+      import('@tauri-apps/api/window')
+        .then(({ getCurrentWindow }) => getCurrentWindow().setTheme(mode === 'system' ? null : resolved))
+        .catch(() => {})
+    }
+  }, [resolved, mode])
 
   const setMode = useCallback((m: ThemeMode) => {
     setModeState(m)

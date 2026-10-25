@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Pause, Play, Timer, X, Check } from 'lucide-react'
 import { useTimers } from '@/hooks/useTimers'
 import { formatClock } from '@/lib/time'
-import { cn, haptic } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 
 /** Кнопка таймера для кроку рецепта */
 export function StepTimerButton({ id, label, minutes, size = 'md' }: { id: string; label: string; minutes: number; size?: 'md' | 'lg' }) {
@@ -15,7 +15,6 @@ export function StepTimerButton({ id, label, minutes, size = 'md' }: { id: strin
       <button
         type="button"
         onClick={() => {
-          haptic(15)
           start(id, label, minutes)
         }}
         className={cn(
@@ -67,7 +66,7 @@ export function StepTimerButton({ id, label, minutes, size = 'md' }: { id: strin
 export function TimerDock() {
   const { timers, toggle, remove, remaining } = useTimers()
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-[calc(env(safe-area-inset-bottom)+84px)] z-40 flex flex-col items-center gap-2 px-4 md:bottom-6 md:left-auto md:items-end">
+    <div className="pointer-events-none fixed right-6 bottom-6 z-40 flex flex-col items-end gap-2">
       <AnimatePresence>
         {timers.map((t) => (
           <motion.div
