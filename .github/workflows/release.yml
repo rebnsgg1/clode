@@ -1,6 +1,7 @@
 name: Release
 
-# Збирає Windows-інсталятор і публікує його в GitHub Releases при пуші тегу v*
+# Збирає Windows-інсталятор і публікує його в GitHub Releases.
+# Запуск: пуш тегу v* або кнопка «Run workflow» в Actions (тег v<версія з package.json> створиться сам).
 on:
   push:
     tags: ['v*']
@@ -38,8 +39,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: ${{ github.ref_name }}
-          releaseName: 'Моє меню ${{ github.ref_name }}'
+          tagName: v__VERSION__
+          releaseName: 'Моє меню v__VERSION__'
           releaseBody: |
             ## Встановлення
             1. Завантаж **moie-menu_…_x64-setup.exe** нижче й запусти його.
